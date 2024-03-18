@@ -3,7 +3,7 @@
 Um sistema de mercado para o projeto da disciplina 
 de banco de dados com Marcelo Iuri
 
-![Logo](MercadoBD/blob/main/logo.png)
+![Logo](logo.png)
 
 # **Sobre o código**:
 
