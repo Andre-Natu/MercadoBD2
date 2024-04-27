@@ -2,9 +2,10 @@ from tkinter.ttk import *
 from tkinter import *
 # noinspection PyUnresolvedReferences
 from tkinter import messagebox, ttk
+from datetime import datetime
 
 from PIL import ImageTk, Image
-# noinspection PyUnresolvedReferences
+
 from tkcalendar import Calendar, DateEntry
 
 import database
@@ -32,7 +33,8 @@ def registrar():
     nome = e_nome.get()
     quantidade = e_quantidade.get()
     valor = preco.get()
-    validade = data_validade.get()
+    data_antiga = data_validade.get()
+    validade = data_validade.get_date().strftime('%Y-%m-%d')
 
     database.registro.registrar_produto(nome, quantidade, valor, validade)
     mostrar_produtos()
@@ -43,7 +45,8 @@ def atualizar():
     nome = e_nome.get()
     quantidade = e_quantidade.get()
     valor = preco.get()
-    validade = data_validade.get()
+    data_antiga = data_validade.get()
+    validade = data_validade.get_date().strftime('%Y-%m-%d')
     rowid = database.registro.obter_id(nome_anterior)
 
     database.registro.alterar_produto((rowid, nome, quantidade, valor, validade))
