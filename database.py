@@ -1,16 +1,14 @@
 import mysql.connector
 from tkinter import messagebox
 
+from Connection import Conexao
+
 
 class Registro:
     def __init__(self):
-        self.conn = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            passwd="79801320natu;;",
-            database="mercadoBomDemais"
-        )
-        self.c = self.conn.cursor()
+        self.db_connection = Conexao()
+        self.c = self.db_connection.c
+        self.conn = self.db_connection.conn
         self.create_table()
 
     def create_table(self):
@@ -19,41 +17,21 @@ class Registro:
                        nome TEXT,
                        quantidade INTEGER,
                        preco DECIMAL(10, 2),
+                       categoria TEXT,
+                       fabricado_mari TEXT,
                        validade DATE)''')
 
-    def registrar_produto(self, nome, quantidade, preco, validade):
-        dados_produto = (nome, quantidade, preco, validade)
-        self.c.execute("INSERT INTO produtos (nome, quantidade, preco, validade) VALUES (%s, %s, %s, %s)",
-                       dados_produto)
+    def registrar_produto(self, nome, quantidade, preco, categoria, fabricado_mari, validade):
+        dados_produto = (nome, quantidade, preco, categoria, fabricado_mari, validade)
+        self.c.execute("INSERT INTO produtos (nome, quantidade, preco, categoria, fabricado_mari, validade) VALUES ("
+                       "%s, %s, %s, %s, %s, %s)", dados_produto)
         self.conn.commit()
         messagebox.showinfo("Registro", "Produto registrado com sucesso.")
 
-    def visualizar_todos_produtos(self):
-        self.c.execute("SELECT * FROM produtos")
-        dados = self.c.fetchall()
-
-        return dados
-
-    def pesquisar_produto(self, nome):
-        self.c.execute("SELECT * FROM produtos WHERE nome = %s", (nome,))
-        dados = self.c.fetchone()
-
-        return dados
-
-    def obter_id(self, nome):
-        self.c.execute("SELECT id FROM produtos WHERE nome = %s", (nome,))
-
-        rowid = self.c.fetchone()
-        if rowid:
-            return rowid[0]
-        else:
-            messagebox.showinfo("Erro", "Erro, o produto não foi encontrado")
-            return None
-
     def alterar_produto(self, novos_dados):
-
-        query = "UPDATE produtos SET nome = %s, quantidade = %s, preco = %s, validade = %s WHERE id = %s"
-        self.c.execute(query, (novos_dados[1], novos_dados[2], novos_dados[3], novos_dados[4], novos_dados[0]))
+        query = ("UPDATE produtos SET nome = %s, quantidade = %s, preco = %s, categoria = %s, fabricado_mari = %s, "
+                 "validade = %s WHERE id = %s")
+        self.c.execute(query, (novos_dados[1], novos_dados[2], novos_dados[3], novos_dados[4], novos_dados[5], novos_dados[6], novos_dados[0]))
         self.conn.commit()
 
         messagebox.showinfo('Alteração', f'Produto do ID: {novos_dados[0]} atualizado com sucesso!')
